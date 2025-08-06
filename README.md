@@ -2,6 +2,14 @@
 
 A high-performance, multithreaded Bitcoin HD wallet address generator and seed manager written in Rust. Supports BIP44, BIP49, BIP84, and BIP86 derivation paths. Designed for research, auditing, and bulk key generation at massive scale — billions of addresses per hour on modern hardware.
 
+## Show Supoort
+
+I make nothing creating and sharing the tools I create. I do it for my love of the space and my love of the people in the space.
+
+Help a fellow dev out, I aint vibe codinghere. Whats a sat or two between friends. :)
+
+Bitcoin: bc1qefwlk0hhxvqw3k6sgs2avhccck3cqyzlad6ecp
+
 ## Features
 
 - Generates valid BIP39 seed phrases (12-word)
