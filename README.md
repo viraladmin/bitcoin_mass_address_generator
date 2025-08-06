@@ -2,6 +2,18 @@
 
 A high-performance, multithreaded Bitcoin HD wallet address generator and seed manager written in Rust. Supports BIP44, BIP49, BIP84, and BIP86 derivation paths. Designed for research, auditing, and bulk key generation at massive scale — billions of addresses per hour on modern hardware.
 
+---
+
+## Show Support
+
+I make nothing creating and sharing the tools I create. I do it for my love of the space and my love of the people in the space.
+
+Help a fellow dev out, I aint vibe codinghere. Whats a sat or two between friends. :)
+
+Bitcoin: bc1ql9xt4l62ly6pp7s9358rkdefrwc0mm5yne78xl
+
+---
+
 ## Features
 
 - Generates valid BIP39 seed phrases (12-word)
@@ -15,17 +27,23 @@ A high-performance, multithreaded Bitcoin HD wallet address generator and seed m
   - Wallet addresses
 - Recalls addresses, seedwords and privkeys from seed index and address index
 
+---
+
 ## Requirements
 
 - Rust 1.76+
 - PostgreSQL
 - Linux (for best performance; WSL has known memory limits)
 
+---
+
 ## Installation
 
 ```
 cargo install bitcoin_mass_address_generator
 ```
+
+---
 
 ## Configuration
 
@@ -52,6 +70,8 @@ ADDRESSES=4000000
 WRITES=2
 ```
 
+---
+
 ## PostgreSQL Schema
 
 ```
@@ -67,6 +87,8 @@ CREATE TABLE addresses (
 );
 ```
 
+---
+
 ## After address creation
 
 Add indexes to the database tables after creation.
@@ -75,6 +97,8 @@ Add indexes to the database tables after creation.
 CREATE INDEX ON addresses(seed_id, id);
 CREATE INDEX ON keys(id);
 ```
+
+---
 
 ## Usage
 
@@ -85,6 +109,8 @@ CREATE INDEX ON keys(id);
 ```
 
 This will spawn N threads (defined in .env) to generate seed phrases and addresses, writing in bulk to PostgreSQL.
+
+---
 
 ### Recall Wallet Data
 
@@ -102,15 +128,21 @@ Returns:
   - Raw hex
   - Mini key (if derivable)
 
+---
+
 ## Performance Notes
 - Designed for high-speed environments
 - Works best on real Linux (not WSL)
 - PostgreSQL COPY is used for fast bulk inserts
 - Memory tuning may be needed for large volumes
 
+---
+
 ## License
 
 MIT
+
+---
 
 ## Disclaimer
 
