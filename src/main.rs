@@ -51,8 +51,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 } else {
                     start + chunk_size
                 };
+                if start >= total_seeds {
+                    continue;
+                }
                 let handle = tokio::spawn(async move {
-                    println!("start: {}, end: {}", &start, &end);
                     if let Err(e) = generate(start as usize, end as usize).await {
                         eprintln!("Task {} error: {}", task_id, e);
                     }
