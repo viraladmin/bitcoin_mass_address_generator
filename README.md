@@ -26,6 +26,7 @@ Bitcoin: bc1ql9xt4l62ly6pp7s9358rkdefrwc0mm5yne78xl
   - Seed → wordlist index mapping
   - Wallet addresses
 - Recalls addresses, seedwords and privkeys from seed index and address index
+- Writes addresses and seeds to file
 
 ---
 
@@ -127,6 +128,53 @@ Returns:
   - WIF (uncompressed)
   - Raw hex
   - Mini key (if derivable)
+
+---
+
+---
+
+## Write Data to File
+
+```
+./bitcoin_mass_address_generator write_file <option> <file> <limit>
+```
+
+Exports data from the database to a file. Each option controls what is written.
+
+#### Options:
+
+- `addresses`  
+  Writes a list of wallet addresses (1 per line).  
+  
+  Example output:
+    bc1qxyz...
+    bc1qabc...
+
+- `seeds`  
+  Writes seed phrases (1 per line). These are human-readable phrases derived from stored index arrays.  
+  
+  Example output:
+    gravity spy pencil vault signal elite brief avoid coach style flush attack  
+
+- `seeds_addresses`
+
+  Writes seed phrase and corresponding address on each line.
+  
+  Example output:
+    gravity spy pencil vault signal elite brief avoid coach style flush attack - bc1qxyz...
+
+#### Parameters:
+
+- `<file>` — Output filename  
+- `<limit>` — Max number of rows to export
+
+#### Example:
+
+```sh
+./bitcoin_mass_address_generator write_file seeds_addresses exported.txt 100
+```
+
+This will write the first 100 seed-address pairs to exported.txt.
 
 ---
 

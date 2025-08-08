@@ -14,6 +14,10 @@ mod seeds;
 use seeds::recall_seeds;
 use seeds::generate_keys;
 
+mod write;
+use write::get_write_addresses;
+use write::get_write_seeds;
+use write::get_write_seeds_addresses;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -24,6 +28,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         eprintln!("Usage:");
         eprintln!("  generate");
         eprintln!("  recall <seed_index> <address_index>");
+        eprintln!("  recall <seed_index> <address_index>");
+        eprintln!("  write_file addresses <file_name> <limit>");
+        eprintln!("  write_file seeds <file_name> <limit>");
+        eprintln!("  write_file seeds_addresses <file_name> <limit>");
         return Ok(());
     }
 
@@ -115,11 +123,45 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 println!("❌ Could not generate keys.");
             }
         }
+        "write_file" => { 
+            match args[2].as_str() {
+                "addresses" => { 
+                    let file = args[3].as_str();
+                    let limit: i64 = args[4].parse()?;
+                    let _ = get_write_addresses(file, limit).await;
+                    println!("finished");
+                }
+                "seeds" => {
+                    let file = args[3].as_str();
+                    let limit: i64 = args[4].parse()?;
+                    let _ = get_write_seeds(file, limit).await;
+                    println!("finished");
+                }
+                "seeds_addresses" => {
+                    let file = args[3].as_str();
+                    let limit: i64 = args[4].parse()?;
+                    let _ = get_write_seeds_addresses(file, limit).await;
+                    println!("finished");
+                }
+                _ => {
+                    eprintln!("Unknown command: {}", args[1]);
+                    eprintln!("Commands:");
+                    eprintln!("  generate");
+                    eprintln!("  recall <seed_index> <address_index>");
+                    eprintln!("  write_file addresses <file_name> <limit>");
+                    eprintln!("  write_file seeds <file_name> <limit>");
+                    eprintln!("  write_file seeds_addresses <file_name> <limit>");
+                }
+            }
+        }
         _ => {
             eprintln!("Unknown command: {}", args[1]);
             eprintln!("Commands:");
             eprintln!("  generate");
             eprintln!("  recall <seed_index> <address_index>");
+            eprintln!("  write_file addresses <file_name> <limit>");
+            eprintln!("  write_file seeds <file_name> <limit>");
+            eprintln!("  write_file seeds_addresses <file_name> <limit>");
         }
     }
     Ok(())
