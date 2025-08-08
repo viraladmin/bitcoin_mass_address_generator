@@ -11,6 +11,12 @@ pub async fn get_pg_client() -> Result<(Client, Connection<Socket, NoTlsStream>)
     Ok((client, connection))
 }
 
+pub async fn get_pg_client2() -> Result<(Client, Connection<Socket, NoTlsStream>), Box<dyn Error>> {
+    let db_url = dotenvy::var("DATABASE_URL2")?;
+
+    let (client, connection) = tokio_postgres::connect(&db_url, NoTls).await?;
+    Ok((client, connection))
+}
 
 pub async fn write_to_db<'a>(
     client: &'a mut Client,

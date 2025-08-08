@@ -6,9 +6,9 @@ A high-performance, multithreaded Bitcoin HD wallet address generator and seed m
 
 ## Show Support
 
-I make nothing creating and sharing the tools I create. I do it for my love of the space and my love of the people in the space.
+I make nothing creating and sharing the tools I develop. I do it for my love of the space and the people in it.
 
-Help a fellow dev out, I aint vibe codinghere. Whats a sat or two between friends. :)
+Help a fellow dev out, I ain't vibe coding here. What's a sat or two between friends? :)
 
 Bitcoin: bc1ql9xt4l62ly6pp7s9358rkdefrwc0mm5yne78xl
 
@@ -25,8 +25,9 @@ Bitcoin: bc1ql9xt4l62ly6pp7s9358rkdefrwc0mm5yne78xl
 - Uses PostgreSQL for fast, concurrent bulk insert of:
   - Seed → wordlist index mapping
   - Wallet addresses
-- Recalls addresses, seedwords and privkeys from seed index and address index
+- Recalls addresses, seedwords and private keys from seed index and address index
 - Writes addresses and seeds to file
+- Examines addresses for balance (requires [Bitcoin Balance ETL](https://github.com/viraladmin/bitcoin_balance_etl))
 
 ---
 
@@ -40,7 +41,7 @@ Bitcoin: bc1ql9xt4l62ly6pp7s9358rkdefrwc0mm5yne78xl
 
 ## Installation
 
-```
+```bash
 cargo install bitcoin_mass_address_generator
 ```
 
@@ -50,9 +51,14 @@ cargo install bitcoin_mass_address_generator
 
 Create a .env file in your root directory:
 
-```
+```env
 # PostgreSQL connection string
 DATABASE_URL="postgres://user:pass@localhost:5432/wallet_addresses"
+
+# PostgreSQL connection string for [Bitcoin Balance ETL](https://github.com/viraladmin/bitcoin_balance_etl)
+# Leave empty if not installed.
+# DATABASE_URL2="postgres://user:pass@localhost:5432/btc_wallets"
+DATABASE_URL2=""
 
 # Address types to generate (comma-separated)
 # Valid: legacy, segwit, segwit_native, taproot
@@ -75,7 +81,7 @@ WRITES=2
 
 ## PostgreSQL Schema
 
-```
+```sql
 CREATE TABLE keys (
     id BIGINT,
     words SMALLINT[] NOT NULL
@@ -90,11 +96,11 @@ CREATE TABLE addresses (
 
 ---
 
-## After address creation
+## After Address Creation
 
 Add indexes to the database tables after creation.
 
-```
+```sql
 CREATE INDEX ON addresses(seed_id, id);
 CREATE INDEX ON keys(id);
 ```
@@ -105,7 +111,7 @@ CREATE INDEX ON keys(id);
 
 ### Generate Addresses
 
-```
+```bash
 ./bitcoin_mass_address_generator generate
 ```
 
@@ -115,7 +121,7 @@ This will spawn N threads (defined in .env) to generate seed phrases and address
 
 ### Recall Wallet Data
 
-```
+```bash
 ./bitcoin_mass_address_generator recall <seed_index> <address_index>
 ```
 
@@ -131,11 +137,9 @@ Returns:
 
 ---
 
----
-
 ## Write Data to File
 
-```
+```bash
 ./bitcoin_mass_address_generator write_file <option> <file> <limit>
 ```
 
@@ -170,11 +174,29 @@ Exports data from the database to a file. Each option controls what is written.
 
 #### Example:
 
-```sh
+```bash
 ./bitcoin_mass_address_generator write_file seeds_addresses exported.txt 100
 ```
 
 This will write the first 100 seed-address pairs to exported.txt.
+
+---
+
+## Examine Addresses
+
+```bash
+./bitcoin_mass_address_generator examine <seed_id>
+```
+
+Checks each address under given seed id and returns address if balance is greater than 0.
+
+#### Example:
+
+```bash
+./bitcoin_mass_address_generator examine 1
+```
+
+Returns all addresses for the first seed with a balance greater than 0.
 
 ---
 

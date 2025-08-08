@@ -5,6 +5,9 @@ use address::recall_address;
 
 mod constants;
 
+mod examine;
+use examine::examine_addresses;
+
 mod generate;
 use generate::generate;
 
@@ -27,7 +30,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     if args.len() < 2 {
         eprintln!("Usage:");
         eprintln!("  generate");
-        eprintln!("  recall <seed_index> <address_index>");
+        eprintln!("  examine <seed_index>");
         eprintln!("  recall <seed_index> <address_index>");
         eprintln!("  write_file addresses <file_name> <limit>");
         eprintln!("  write_file seeds <file_name> <limit>");
@@ -147,6 +150,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                     eprintln!("Unknown command: {}", args[1]);
                     eprintln!("Commands:");
                     eprintln!("  generate");
+                    eprintln!("  examine <seed_index>");
                     eprintln!("  recall <seed_index> <address_index>");
                     eprintln!("  write_file addresses <file_name> <limit>");
                     eprintln!("  write_file seeds <file_name> <limit>");
@@ -154,10 +158,18 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 }
             }
         }
+        "examine" => {
+            let seed_index: i64 = args[2].parse()?;
+            let results: Vec<String> = examine_addresses(seed_index).await?;
+            for address in results {
+                println!("address: {}", address);
+            }
+        }
         _ => {
             eprintln!("Unknown command: {}", args[1]);
             eprintln!("Commands:");
             eprintln!("  generate");
+            eprintln!("  examine <seed_index>");
             eprintln!("  recall <seed_index> <address_index>");
             eprintln!("  write_file addresses <file_name> <limit>");
             eprintln!("  write_file seeds <file_name> <limit>");
